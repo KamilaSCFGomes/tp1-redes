@@ -1,3 +1,8 @@
+/.vscode
+
+# Executaveis
+boli_*
+
 # Prerequisites
 *.d
 
