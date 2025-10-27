@@ -1,0 +1,10 @@
+#ifndef SERVIDOR_H
+#define SERVIDOR_H
+
+// INICIA O SERVIDOR EM UMA PORTA ESPECIFICA E RETORNA O SOCKET CRIADO. PODE REALIZAR MAIS TENTATIVAS CASO A PORTA ESTEJA OCUPADA
+int iniciaServidor(int porta, int maxTentativas, int numConexoes);
+
+// CONECTA UM CLIENTE AO SERVIDOR E RETORNA O SOCKET DO CLIENTE
+int conectaCliente(int serverSocket);
+
+#endif
