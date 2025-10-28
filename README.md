@@ -40,6 +40,10 @@ trabalho_redes/
 │   ├── cliente.h
 │   └── Makefile
 ├── servidor/
+│   ├── arquivo.c
+│   ├── arquivo.h
+│   ├── http.c
+│   ├── http.h
 │   ├── main.c
 │   ├── servidor.c
 │   ├── servidor.h
@@ -82,6 +86,12 @@ trabalho_redes/
 │   ├── cliente.o
 │   └── Makefile
 ├── servidor/
+│   ├── arquivo.c
+│   ├── arquivo.h
+│   ├── arquivo.o
+│   ├── http.c
+│   ├── http.h
+│   ├── http.o
 │   ├── main.c
 │   ├── main.o
 │   ├── servidor.c
@@ -99,9 +109,6 @@ Para limpar os arquivos gerados, execute um comando make clean na pasta mãe.
 make clean
 ```
 
-## Personalização
-
-
 # Utilização
 
 ## Navegador
@@ -113,22 +120,23 @@ Após compilar, execute o arquivo ```boli_servidor```, especificando o diretóri
 ./boli_servidor [diretório]
 ```
 
-O programa verificará a existência do diretório, e então tentará criar um socket e iniciar o servidor, podendo utilizar outros sockets caso o especificado não seja possível utilizar o socket especificado. Ele informará no terminal qual foi o socket utilizado.
+O programa verificará a existência do diretório, e então tentará criar um socket e iniciar o servidor, podendo utilizar outros sockets caso o especificado não seja possível utilizar o socket especificado. (É possível determinar quantas tentativas podem ser feitas ao chamar a função.) Ele informará no terminal qual foi o socket utilizado.
 
-``` bash
-a
-```
-
-Utilize o socket especificado para se conectar ao servidor. Isso pode ser feito utilizando telnet
+Utilize o socket especificado para se conectar ao servidor. Isso pode ser feito utilizando telnet ou curl.
 
 ``` bash
 telnet localhost 8000
 ```
 
-O servidor avisará que um cliente foi conectado, informando seu nome e porta utilizada.
+O servidor avisará que um cliente foi conectado, informando seu nome e porta utilizada, e então está pronto para uso.
 
-``` bash
-conectado
-```
+O servidor apenas atende a requisições ```GET /[arquivo]``` e responde seguindo o protocolo http. As respostas possíveis são:
 
-O servidor apenas atende a requisições ```GET /[arquivo]```.
+- ```200 - OK``` -> Sucesso
+- ```400 - Bad request``` -> Requisição feita sem utilizar o método ```GET```
+- ```401 - Unauthorized``` -> O caminho contém ```..``` (por segurança, para evitar acessar outras pastas)
+- ```404 - Not found``` -> O diretório não foi encontrado
+
+Caso o caminho especificado corresponda a um arquivo, ele será enviado, se existir.
+
+Se o caminho corresponder a uma pasta, enviará ```index.html``` se existir. Caso contrário, construirá uma lista do conteúdo da pasta.

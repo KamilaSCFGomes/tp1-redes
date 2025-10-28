@@ -55,7 +55,7 @@ int conectaCliente(int serverSocket){
     struct sockaddr_in clientAddr;
     int csize  = sizeof clientAddr;
 
-    int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddr, &csize);
+    int clientSocket = accept(serverSocket, (struct sockaddr *) &clientAddr, (unsigned int *)&csize);
     if(clientSocket == -1){
         printf("Um cliente não conseguiu conectar\n");
         return -1;

@@ -9,9 +9,16 @@
 #include <netdb.h>
 
 #include "servidor.h"
+#include "arquivo.h"
+#include "http.h"
+
 int TAM_BUFFER = 129;
 
-int main(){
+int main(int argc, char *argv[]) {
+
+    // VERIFICANDO A VALIDADE DO ARQUIVO
+    if(verificaDiretorioValido(argc, argv)<0) return -1;
+    const char* diretorio = argv[1];
 
     // INICIANDO O SERVIDOR EM UMA PORTA
     printf("O IP do servidor é:\n");
@@ -44,8 +51,8 @@ int main(){
             // MOSTRAR MENSAGEM
             printf("Recebido: %s", buffer);
 
-            // REENVIAR MENSAGEM
-            send(socketCliente, buffer, bytesReceb+1, 0);
+            // INTERPRETAR MENSAGEM
+            printf("Resposta: %d\n\n", processaRequisicao(socketCliente, buffer, diretorio, TAM_BUFFER));
         }
 
         close(socketCliente);

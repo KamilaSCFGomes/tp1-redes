@@ -5,7 +5,7 @@ LDFLAGS =
 
 # Define project name and source files
 TARGET = ../boli_servidor # ../ para colocar na pasta anterior
-SRCS = main.c servidor.c # adicionar outros modulos se tiver
+SRCS = main.c servidor.c arquivo.c http.c # adicionar outros modulos se tiver
 OBJS = $(SRCS:.c=.o) # Automatically generate object file names
 
 # Default target: build the program
