@@ -12,7 +12,7 @@
 #include "arquivo.h"
 #include "http.h"
 
-int TAM_BUFFER = 129;
+int TAM_BUFFER = 1025;
 
 int main(int argc, char *argv[]) {
 
@@ -56,6 +56,7 @@ int main(int argc, char *argv[]) {
         }
 
         close(socketCliente);
+        printf("Cliente desconectado\n");
     }
     
     close(socketServidor);
