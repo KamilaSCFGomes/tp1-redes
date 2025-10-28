@@ -140,3 +140,5 @@ O servidor apenas atende a requisições ```GET /[arquivo]``` e responde seguind
 Caso o caminho especificado corresponda a um arquivo, ele será enviado, se existir.
 
 Se o caminho corresponder a uma pasta, enviará ```index.html``` se existir. Caso contrário, construirá uma lista do conteúdo da pasta.
+
+Para desconectar o cliente, envie uma mensagem vazia.

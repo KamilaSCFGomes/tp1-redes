@@ -55,12 +55,12 @@ int enviaLista(int clientSocket, const char* caminho){
         "\r\n";
     write(clientSocket, header, strlen(header));
 
-    write(clientSocket, "<html><body><h1>Index:</h1><ul>", 32);
+    write(clientSocket, "<html><body><h1>Index:</h1><ul>\n", 32);
 
     struct dirent *entry;
     while((entry = readdir(dir)) != NULL){
         char line[512];
-        snprintf(line, sizeof(line), "<li><a href=\"%s\">%s</a></li>",
+        snprintf(line, sizeof(line), "<li><a href=\"%s\">%s</a></li>\n",
                  entry->d_name, entry->d_name);
         write(clientSocket, line, strlen(line));
     }

@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
             if(bytesReceb == -1){
                 printf("Problema de conexão\n");
                 break;
-            } else if(bytesReceb == 0){
+            } else if(bytesReceb <= 2){
                 printf("Cliente desconectado\n");
                 break;
             }
@@ -57,5 +57,7 @@ int main(int argc, char *argv[]) {
 
         close(socketCliente);
     }
+    
+    close(socketServidor);
     return 0;
 }
