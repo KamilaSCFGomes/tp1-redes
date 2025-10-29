@@ -60,7 +60,39 @@ trabalho_redes/
 Certifique-se de que todas as bibliotecas necessárias estão instaladas.
 Depois, compile o código utilizando makefile.
 
-## Bibliotecas utilizadas
+## Dependências
+### Compilador
+GCC ou outro compilador de C
+```bash
+sudo apt install build-essential
+```
+### Make
+Para automatizar a compilação utilizando Makefile
+```bash
+sudo apt install make
+```
+### Bibliotecas de rede e sistema
+As seguintes bibliotecas padrão são utilizadas para comunicação via sockets e manipulação de arquivos e diretórios:
+
+- ```<sys/types.h>```
+
+- ```<sys/socket.h>```
+
+- ```<arpa/inet.h>```
+
+- ```<netdb.h>```
+
+- ```<unistd.h>```
+
+- ```<string.h>```
+
+- ```<stdio.h>```
+
+- ```<stdlib.h>```
+
+- ```<sys/stat.h>```
+
+Essas bibliotecas já fazem parte do ambiente POSIX e não precisam de instalação adicional no Linux ou WSL.
 
 
 ## Compilação
