@@ -9,7 +9,7 @@ TARGET_SERVIDOR = boli_servidor
 # Default target: builds the executable
 all: $(TARGET_CLIENTE) $(TARGET_SERVIDOR)
 	clear
-	echo sucesso
+	# finalizado
 navegador: $(TARGET_CLIENTE)
 servidor: $(TARGET_SERVIDOR)
 

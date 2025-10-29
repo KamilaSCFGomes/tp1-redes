@@ -52,32 +52,18 @@ void resp401(int clientSocket) {
 
 // redireciona o endereco com / no final
 void redirecionaBarra(int clientSocket, const char *parametro) {
-    // garante que o parâmetro começa com '/'
-    const char *path = (parametro[0] == '/') ? parametro : "/";
-    
-    // cria o novo local com barra final
     char novoLocal[512];
-    snprintf(novoLocal, sizeof(novoLocal), "http://localhost:8000%s/", path); // <-- ajuste aqui
-    
-    // corpo simples informando o redirecionamento
-    char body[512];
-    snprintf(body, sizeof(body),
-        "<html><body><h1>301 Moved Permanently</h1>"
-        "<p>O recurso foi movido para <a href=\"%s\">%s</a>.</p>"
-        "</body></html>", novoLocal, novoLocal);
+    snprintf(novoLocal, sizeof(novoLocal), "%s/", parametro);
 
     char resposta[1024];
     snprintf(resposta, sizeof(resposta),
         "HTTP/1.1 301 Moved Permanently\r\n"
         "Location: %s\r\n"
-        "Content-Type: text/html\r\n"
-        "Content-Length: %zu\r\n"
+        "Content-Length: 0\r\n"
         "Connection: close\r\n"
-        "\r\n"
-        "%s",
-        novoLocal, strlen(body), body);
+        "\r\n", novoLocal);
 
-    write(clientSocket, resposta, strlen(resposta));
+    send(clientSocket, resposta, strlen(resposta), 0);
 }
 
 // lista os arquivos do diretorio e envia para o cliente
