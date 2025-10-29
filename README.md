@@ -122,15 +122,18 @@ Após compilar, execute o arquivo ```boli_servidor```, especificando o diretóri
 
 O programa verificará a existência do diretório, e então tentará criar um socket e iniciar o servidor, podendo utilizar outros sockets caso o especificado não seja possível utilizar o socket especificado. (É possível determinar quantas tentativas podem ser feitas ao chamar a função.) Ele informará no terminal qual foi o socket utilizado.
 
-Utilize o socket especificado para se conectar ao servidor. Isso pode ser feito utilizando telnet ou curl.
+Utilize o socket especificado e o IP da máquina para se conectar ao servidor. Isso pode ser feito utilizando telnet ou curl, ou acessando o endereço no navegador.
 
 ``` bash
 telnet localhost 8000
 ```
+```
+http://localhost:8000/
+```
 
 O servidor avisará que um cliente foi conectado, informando seu nome e porta utilizada, e então está pronto para uso.
 
-O servidor apenas atende a requisições ```GET /[arquivo]``` e responde seguindo o protocolo http. As respostas possíveis são:
+O servidor apenas atende a requisições ```GET /[arquivo]``` e responde seguindo o protocolo http:
 
 - ```200 - OK``` -> Sucesso
 - ```400 - Bad request``` -> Requisição feita sem utilizar o método ```GET```
@@ -141,4 +144,4 @@ Caso o caminho especificado corresponda a um arquivo, ele será enviado, se exis
 
 Se o caminho corresponder a uma pasta, enviará ```index.html``` se existir. Caso contrário, construirá uma lista do conteúdo da pasta.
 
-Para desconectar o cliente, envie uma mensagem vazia.
+Para desconectar o cliente pelo terminal, envie uma requisição vazia.

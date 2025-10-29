@@ -10,7 +10,7 @@
 
 #include "servidor.h"
 #include "arquivo.h"
-#include "http.h"
+#include "http_servidor.h"
 
 int TAM_BUFFER = 1025;
 

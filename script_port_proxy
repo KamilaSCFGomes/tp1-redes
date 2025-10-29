@@ -1,0 +1,5 @@
+# atualiza-portproxy.ps1
+# rodar no powershell em modo de administrador para rodar o servidor no wsl
+$wsl_ip = wsl hostname -I
+netsh interface portproxy reset
+netsh interface portproxy add v4tov4 listenport=8000 listenaddress=0.0.0.0 connectport=8000 connectaddress=$wsl_ip

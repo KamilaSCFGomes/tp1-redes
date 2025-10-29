@@ -5,7 +5,7 @@ LDFLAGS =
 
 # Define project name and source files
 TARGET = ../boli_navegador # ../ para colocar na pasta anterior
-SRCS = main.c navegador.c # adicionar outros modulos se tiver
+SRCS = main.c http_client.c arquivo.c conexao.c # adicionar outros modulos se tiver
 OBJS = $(SRCS:.c=.o) # Automatically generate object file names
 
 # Default target: build the program
