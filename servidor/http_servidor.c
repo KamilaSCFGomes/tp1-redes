@@ -52,22 +52,32 @@ void resp401(int clientSocket) {
 
 // redireciona o endereco com / no final
 void redirecionaBarra(int clientSocket, const char *parametro) {
-    char location[512];
+    // garante que o parâmetro começa com '/'
+    const char *path = (parametro[0] == '/') ? parametro : "/";
+    
+    // cria o novo local com barra final
+    char novoLocal[512];
+    snprintf(novoLocal, sizeof(novoLocal), "http://localhost:8000%s/", path); // <-- ajuste aqui
+    
+    // corpo simples informando o redirecionamento
+    char body[512];
+    snprintf(body, sizeof(body),
+        "<html><body><h1>301 Moved Permanently</h1>"
+        "<p>O recurso foi movido para <a href=\"%s\">%s</a>.</p>"
+        "</body></html>", novoLocal, novoLocal);
 
-    if (parametro == NULL || parametro[0] == '\0') snprintf(location, sizeof(location), "/");
-    else {
-        snprintf(location, sizeof(location), "%s/", parametro);
-    }
-
-    char header[512];
-    int n = snprintf(header, sizeof(header),
+    char resposta[1024];
+    snprintf(resposta, sizeof(resposta),
         "HTTP/1.1 301 Moved Permanently\r\n"
         "Location: %s\r\n"
-        "Content-Length: 0\r\n"
+        "Content-Type: text/html\r\n"
+        "Content-Length: %zu\r\n"
         "Connection: close\r\n"
-        "\r\n", location);
+        "\r\n"
+        "%s",
+        novoLocal, strlen(body), body);
 
-    write(clientSocket, header, n);
+    write(clientSocket, resposta, strlen(resposta));
 }
 
 // lista os arquivos do diretorio e envia para o cliente
@@ -180,22 +190,20 @@ int enviaArquivo(int clientSocket, const char* caminho, int tamBuffer) {
 
 
 // Recebe uma requisição, processa e responde o cliente
-int processaRequisicao(int clientSocket, char* request, const char* diretorio, int tamBuffer){
-
+int processaRequisicao(int clientSocket, char* request, const char* diretorio, int tamBuffer) {
     // separa metodo e parametro
     char metodo[8] = "";
-    memset(metodo, 0, sizeof(metodo));
-    char parametro[strlen(request)];
-    memset(parametro, 0, sizeof(parametro));
-    sscanf(request, "%s %s", metodo, parametro);
+    char parametro[512] = "";
+    sscanf(request, "%7s %511s", metodo, parametro);
     
-    // confere se o metodo é get
-    if(strcmp(metodo, "GET")!=0){
+    // confere se o metodo é GET
+    if (strcmp(metodo, "GET") != 0) {
         resp400(clientSocket); // bad request
         return 400;
     }
+
     // evita sair da pasta com ..
-    if(strstr(parametro, "..")!=NULL){
+    if (strstr(parametro, "..") != NULL) {
         resp401(clientSocket); // nao autorizado
         return 401;
     }
@@ -206,32 +214,33 @@ int processaRequisicao(int clientSocket, char* request, const char* diretorio, i
 
     // verifica se o caminho existe
     struct stat buffer;
-    int status = stat(caminho, &buffer);
-    if(status != 0){
+    if (stat(caminho, &buffer) != 0) {
         resp404(clientSocket); // not found
         return 404;
     }
 
-    // verifica se o caminho é um diretorio
-    if(S_ISDIR(buffer.st_mode)){
-
-        // verifica se termina em / e adiciona
+    // verifica se o caminho é um diretório
+    if (S_ISDIR(buffer.st_mode)) {
         size_t len = strlen(parametro);
-        if (len == 0 || parametro[len-1] != '/') {
+
+        // se o caminho não termina com "/", redireciona com barra
+        if (len == 0 || parametro[len - 1] != '/') {
             redirecionaBarra(clientSocket, parametro);
             return 301;
         }
 
-        // verifica se o diretorio tem um index
+        // tenta servir index.html dentro do diretório
         char caminhoIndex[512];
         snprintf(caminhoIndex, sizeof(caminhoIndex), "%s/index.html", caminho);
 
-        if(stat(caminhoIndex, &buffer) == 0){ // se sim, envia o index
+        if (stat(caminhoIndex, &buffer) == 0) {
             return enviaArquivo(clientSocket, caminhoIndex, tamBuffer);
         }
-        // se nao tem index, monta e envia a lista
-        return enviaLista(clientSocket, caminho, parametro);
 
-    } // se nao for um diretorio, envia o arquivo
+        // se não houver index, gera e envia listagem
+        return enviaLista(clientSocket, caminho, parametro);
+    }
+
+    // caso contrário, envia o arquivo diretamente
     return enviaArquivo(clientSocket, caminho, tamBuffer);
 }

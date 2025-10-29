@@ -34,16 +34,20 @@ Cada projeto possui sua main e módulos separados para melhorar a legibilidade d
 
 ```
 trabalho_redes/
-├── cliente/
+├── navegador/
+│   ├── arquivo.c
+│   ├── arquivo.h
+│   ├── conexao.c
+│   ├── conexao.h
+│   ├── http_client.c
+│   ├── http_client.h
 │   ├── main.c
-│   ├── cliente.c
-│   ├── cliente.h
 │   └── Makefile
 ├── servidor/
 │   ├── arquivo.c
 │   ├── arquivo.h
-│   ├── http.c
-│   ├── http.h
+│   ├── http_servidor.c
+│   ├── http_servidor.h
 │   ├── main.c
 │   ├── servidor.c
 │   ├── servidor.h
@@ -56,7 +60,8 @@ trabalho_redes/
 Certifique-se de que todas as bibliotecas necessárias estão instaladas.
 Depois, compile o código utilizando makefile.
 
-## Dependências
+## Bibliotecas utilizadas
+
 
 ## Compilação
 
@@ -75,33 +80,7 @@ Se desejar compilar ambos os projetos ao mesmo tempo, apenas execute um comando 
 make
 ```
 
-Os executáveis serão gerados na pasta mãe, enquanto os objetos permanecerão nas pastas de seus respectivos projetos.
-
-```
-trabalho_redes/
-├── cliente/
-│   ├── main.c
-│   ├── cliente.c
-│   ├── cliente.h
-│   ├── cliente.o
-│   └── Makefile
-├── servidor/
-│   ├── arquivo.c
-│   ├── arquivo.h
-│   ├── arquivo.o
-│   ├── http.c
-│   ├── http.h
-│   ├── http.o
-│   ├── main.c
-│   ├── main.o
-│   ├── servidor.c
-│   ├── servidor.h
-│   ├── servidor.o
-│   └── Makefile
-├── boli_servidor
-├── boli_cliente
-└── Makefile
-```
+Os executáveis serão gerados na pasta mãe, enquanto os objetos permanecerão nas subpastas de seus respectivos projetos.
 
 Para limpar os arquivos gerados, execute um comando make clean na pasta mãe.
 
@@ -113,6 +92,47 @@ make clean
 
 ## Navegador
 
+Após compilar, execute o arquivo ```boli_navegador```, informando a URL completa do recurso a ser acessado.
+
+``` bash
+./boli_navegador [URL]
+```
+
+Exemplo de uso:
+
+``` bash
+./boli_navegador http://localhost:8000/index.html
+```
+
+
+O programa criará uma conexão com o servidor especificado na URL e enviará uma requisição HTTP do tipo ```GET```. Após receber a resposta, ele analisará o cabeçalho HTTP e salvará o conteúdo do arquivo, caso o mesmo exista.
+
+Os arquivos baixados são armazenados automaticamente na pasta ```arquivos_baixados```, mantendo o mesmo nome e extensão do arquivo original.
+
+Exemplo:
+
+``` bash
+./boli_navegador http://localhost:8000/imagens/foto.png
+```
+
+
+resultará em: ```arquivos_baixados/foto.png```
+
+
+O navegador interpreta as respostas do servidor conforme o protocolo HTTP:
+
+- ```200 - OK ``` -> O arquivo foi encontrado e baixado com sucesso.
+
+- ```301 - Moved Permanently``` -> O navegador seguirá o redirecionamento automaticamente.
+
+- ```400 - Bad request``` -> A requisição enviada é inválida.
+
+- ```401 - Unauthorized``` -> O acesso ao caminho solicitado não é permitido.
+
+- ```404 - Not found``` -> O arquivo ou diretório solicitado não existe.
+
+Após concluir o download do arquivo (ou receber uma resposta de erro), o programa é finalizado automaticamente.
+
 ## Servidor
 Após compilar, execute o arquivo ```boli_servidor```, especificando o diretório a ser utilizado pelo servidor.
 
@@ -120,7 +140,7 @@ Após compilar, execute o arquivo ```boli_servidor```, especificando o diretóri
 ./boli_servidor [diretório]
 ```
 
-O programa verificará a existência do diretório, e então tentará criar um socket e iniciar o servidor, podendo utilizar outros sockets caso o especificado não seja possível utilizar o socket especificado. (É possível determinar quantas tentativas podem ser feitas ao chamar a função.) Ele informará no terminal qual foi o socket utilizado.
+O programa verificará a existência do diretório, e então tentará criar um socket e iniciar o servidor, podendo utilizar outros sockets caso não seja possível utilizar o socket especificado. (É possível determinar quantas tentativas podem ser feitas ao chamar a função.) Ele informará no terminal qual foi o socket utilizado.
 
 Utilize o socket especificado e o IP da máquina para se conectar ao servidor. Isso pode ser feito utilizando telnet ou curl, ou acessando o endereço no navegador.
 

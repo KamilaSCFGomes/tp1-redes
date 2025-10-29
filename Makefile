@@ -8,6 +8,8 @@ TARGET_SERVIDOR = boli_servidor
 
 # Default target: builds the executable
 all: $(TARGET_CLIENTE) $(TARGET_SERVIDOR)
+	clear
+	echo sucesso
 navegador: $(TARGET_CLIENTE)
 servidor: $(TARGET_SERVIDOR)
 
@@ -23,4 +25,5 @@ $(TARGET_SERVIDOR):
 clean:
 	$(MAKE) -C $(CLIENTE_DIR) clean
 	$(MAKE) -C $(SERVIDOR_DIR) clean
+	rm -rf arquivos_baixados
 	clear

@@ -1,17 +1,25 @@
-#include <stdio.h>
-#include <sys/stat.h>
-#include <string.h>
-#include <stdlib.h>
 #include "arquivo.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
-void salvaArquivo(const char* nomeArquivo, const char* dados, int tamanho, int primeiraParte) {
-    mkdir("arquivos_baixados", 0777); // cria pasta se não existir
-    char caminhoFinal[256];
-    snprintf(caminhoFinal, sizeof(caminhoFinal), "arquivos_baixados/%s", nomeArquivo);
+int salvaArquivo(const char *pastaDestino, const char *nomeArquivo, const char *dados, size_t tamanho) {
+    char caminho[512];
+    snprintf(caminho, sizeof(caminho), "%s/%s", pastaDestino, nomeArquivo);
 
-    FILE* f = fopen(caminhoFinal, primeiraParte ? "wb" : "ab");
-    if (!f) { perror("Erro ao criar arquivo"); return; }
+    // Cria pasta se não existir
+    mkdir(pastaDestino, 0777);
 
-    fwrite(dados, 1, tamanho, f);
-    fclose(f);
+    int fd = open(caminho, O_CREAT | O_WRONLY | O_TRUNC, 0666);
+    if (fd < 0) {
+        perror("Erro ao criar arquivo");
+        return -1;
+    }
+
+    write(fd, dados, tamanho);
+    close(fd);
+
+    return 0;
 }

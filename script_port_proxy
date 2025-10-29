@@ -3,3 +3,9 @@
 $wsl_ip = wsl hostname -I
 netsh interface portproxy reset
 netsh interface portproxy add v4tov4 listenport=8000 listenaddress=0.0.0.0 connectport=8000 connectaddress=$wsl_ip
+netsh interface portproxy add v4tov4 listenport=8001 listenaddress=0.0.0.0 connectport=8001 connectaddress=$wsl_ip
+
+netsh advfirewall firewall add rule name="Servidor HTTP WSL-0" dir=in action=allow protocol=TCP localport=8000
+netsh advfirewall firewall add rule name="Servidor HTTP WSL-1" dir=in action=allow protocol=TCP localport=8001
+
+netsh interface portproxy show all
